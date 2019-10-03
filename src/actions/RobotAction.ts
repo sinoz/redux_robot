@@ -1,5 +1,5 @@
 /**
- * A type of action we can apply onto a `CounterState`.
+ * A type of action we can apply onto a `RobotState`.
  */
 export type RobotAction = {
     type: "turnOn"
