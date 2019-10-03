@@ -1,5 +1,5 @@
-import { Reducer } from "redux"
-import { RobotState, robotTurnedOff, robotTurnedOn } from "../state/RobotState"
+import { Reducer } from "redux";
+import { RobotState, robotTurnedOff, robotTurnedOn } from "../state/RobotState";
 
 /**
  * A Redux reducer that consumes a given `RobotAction` to decide on how to
@@ -8,10 +8,10 @@ import { RobotState, robotTurnedOff, robotTurnedOn } from "../state/RobotState"
 export const robotStatusReducer: Reducer<RobotState> = (state: RobotState = robotTurnedOff, action: any) => {
     switch (action.type) {
         case "turnOn":
-            return robotTurnedOn
+            return robotTurnedOn;
         case "turnOff":
-            return robotTurnedOff
+            return robotTurnedOff;
         default:
-            return state
+            return state;
     }
-}
+};
