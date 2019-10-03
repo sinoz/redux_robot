@@ -82,4 +82,4 @@ const advanceLetterIndexTo = (state: RobotState, newIndex: number): RobotState =
  * @param state The `RobotState` to inspect.
  */
 const isOn = (state: RobotState): boolean =>
-    status === "on";
+    state.status === "on";
