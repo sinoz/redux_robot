@@ -1,5 +1,4 @@
-import { Action, AnyAction, Dispatch, Middleware, MiddlewareAPI } from "redux";
-import { RobotAction } from "../actions/RobotAction";
+import { Dispatch, Middleware } from "redux";
 import { RobotState } from "../state/RobotState";
 
 /**
@@ -8,16 +7,19 @@ import { RobotState } from "../state/RobotState";
  * the message is sent to the console.
  * @param api The Redux store.
  */
-export const speakingRobot: Middleware<{}, RobotState, Dispatch> = <D extends Dispatch>(api: MiddlewareAPI<D, RobotState>) =>
-    (next: Dispatch<AnyAction>) => (action: any): any => {
-        // TODO: dispatching from here is impossible atm when the machine is to be turned off due to the ordering of the middlewares, solve!
+export function createSpeakingRobotMiddleware(): Middleware<{}, RobotState, Dispatch> {
+    return (api) => (next) => (action) => {
+        // TODO: dispatching from here is impossible atm when the machine
+        // is to be turned off due to the ordering of the middlewares, solve!
 
         if (action.type === "speak") {
+            // tslint:disable-next-line: no-console
             console.log(action.payload);
         }
 
         return next(action);
     };
+}
 
 /**
  * A middleware function that is executed on every request to check if actions
@@ -25,14 +27,17 @@ export const speakingRobot: Middleware<{}, RobotState, Dispatch> = <D extends Di
  * `RobotState`s, are actually valid moves. Otherwise, an error is thrown.
  * @param api The Redux store.
  */
-export const activityFilter: Middleware<{}, RobotState, Dispatch> = <D extends Dispatch>(api: MiddlewareAPI<D, RobotState>) =>
-    (next: Dispatch<AnyAction>) => (action: any): any => {
+export function createActivityFilter(): Middleware<{}, RobotState, Dispatch> {
+    return (api) => (next) => (action) => {
         switch (action.type) {
             case "speak":
             case "advanceAlphabeticLetter":
                 const robot = api.getState();
                 if (!robot.isOn()) {
-                    throw Error("Please turn the robot on before attempting to make the robot speak or make alphabetic advancements.")
+                    throw Error(
+                        `Please turn the robot on before attempting to make ` +
+                        `the robot speak or make alphabetic advancements.`,
+                    );
                 }
 
                 return next(action);
@@ -40,4 +45,4 @@ export const activityFilter: Middleware<{}, RobotState, Dispatch> = <D extends D
 
         return next(action);
     };
-
+}

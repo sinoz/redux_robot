@@ -1,12 +1,17 @@
 import { applyMiddleware, createStore } from "redux";
-import { advanceAlphabeticLetter, turnRobotOff, turnRobotOn, speak } from "./actions/RobotAction";
-import { activityFilter, speakingRobot } from "./middleware/RobotMiddleware";
+import { advanceAlphabeticLetter, speak, turnRobotOff, turnRobotOn } from "./actions/RobotAction";
+import { createActivityFilter, createSpeakingRobotMiddleware } from "./middleware/RobotMiddleware";
 import { robotStatusReducer } from "./reducer/RobotReducer";
-import { selectAlphabeticLetter } from "./selector/AlphabetSelector";
 
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
-const store = createStore(robotStatusReducer, applyMiddleware(activityFilter, speakingRobot));
+const store = createStore(
+    robotStatusReducer,
+    applyMiddleware(
+        createActivityFilter(),
+        createSpeakingRobotMiddleware(),
+    ),
+);
 
 /**
  * The main entry point to this Redux Robot application.
