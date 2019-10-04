@@ -20,11 +20,11 @@ async function main() {
     // tslint:disable-next-line: no-console
     // store.subscribe(() => console.log(store.getState()));
 
-    store.dispatch(turnRobotOn);
-    store.dispatch(turnRobotOff);
-    store.dispatch(turnRobotOn);
+    store.dispatch(turnRobotOn());
+    store.dispatch(turnRobotOff());
+    store.dispatch(turnRobotOn());
 
-    store.dispatch(advanceAlphabeticLetter);
+    store.dispatch(advanceAlphabeticLetter());
     store.dispatch(speak("Hi!"));
 }
 

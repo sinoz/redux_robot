@@ -22,9 +22,9 @@
     "blue-tape": "^1.0.0",
     "nyc": "^14.1.1",
     "tape": "^4.11.0",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.19.0",
-    "typescript": "^3.5.3"
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   },
   "dependencies": {
     "redux": "^4.0.4",

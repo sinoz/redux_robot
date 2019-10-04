@@ -12,7 +12,7 @@ test(
             robotStatusReducer,
             applyMiddleware(createActivityFilter()),
         );
-
-        t.throws(() => store.dispatch(advanceAlphabeticLetter));
-    },
-);
+      
+        t.throws(() => store.dispatch(advanceAlphabeticLetter()));
+        t.end();
+    });
