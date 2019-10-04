@@ -13,8 +13,8 @@ test("The robot should start in a 'turned-off' state", (t) => {
 test("The robot should be turned off after commanding it to turn itself off", (t) => {
     const store = createStore(robotStatusReducer);
 
-    store.dispatch(turnRobotOn);
-    store.dispatch(turnRobotOff);
+    store.dispatch(turnRobotOn());
+    store.dispatch(turnRobotOff());
 
     t.equals(store.getState().status, "off");
     t.end();
@@ -23,7 +23,7 @@ test("The robot should be turned off after commanding it to turn itself off", (t
 test("The robot should be turned on after commanding it to turn itself on", (t) => {
     const store = createStore(robotStatusReducer);
 
-    store.dispatch(turnRobotOn);
+    store.dispatch(turnRobotOn());
 
     t.equals(store.getState().status, "on");
     t.end();
@@ -39,7 +39,7 @@ test("The robot should start with a letter index pointing to the letter 'A' with
 test("The robot should on command, advance an alphabetic letter by one index", (t) => {
     const store = createStore(robotStatusReducer);
 
-    store.dispatch(advanceAlphabeticLetter);
+    store.dispatch(advanceAlphabeticLetter());
 
     t.equals(String.fromCharCode(store.getState().letterIndex), "B");
     t.end();
@@ -49,12 +49,12 @@ test("The robot should revert its ASCII letter index back to 'A' after advancing
     const store = createStore(robotStatusReducer);
 
     for (let i = 0; i < 25; i++) {
-        store.dispatch(advanceAlphabeticLetter);
+        store.dispatch(advanceAlphabeticLetter());
     }
 
     t.equals(String.fromCharCode(store.getState().letterIndex), "Z");
 
-    store.dispatch(advanceAlphabeticLetter);
+    store.dispatch(advanceAlphabeticLetter());
 
     t.equals(String.fromCharCode(store.getState().letterIndex), "A");
     t.end();
