@@ -51,7 +51,11 @@ export function createSpeakingRobotMiddleware(print: Printer): Middleware<{}, Ro
                 break;
 
             case "advanceAlphabeticLetter":
-                print("Robot has advanced to the letter " + selectAlphabeticLetter(updatedState));
+                print(
+                    `Robot has advanced to the letter ` +
+                    selectAlphabeticLetter(updatedState),
+                );
+
                 break;
         }
 

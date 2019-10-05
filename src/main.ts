@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore } from "redux";
-import { advanceAlphabeticLetter, speak, turnRobotOff, turnRobotOn } from "./actions/RobotAction";
+import { advanceAlphabeticLetter, turnRobotOff, turnRobotOn } from "./actions/RobotAction";
 import { createAlphabeticLetterFilter, createSpeakingRobotMiddleware } from "./middleware/RobotMiddleware";
 import { consolePrinter } from "./printer/console";
 import { robotStatusReducer } from "./reducer/RobotReducer";
