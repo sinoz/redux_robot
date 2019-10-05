@@ -1,48 +1,89 @@
 import { Dispatch, Middleware } from "redux";
+import { Printer } from "../printer/console";
+import { selectAlphabeticLetter } from "../selector/AlphabetSelector";
 import { RobotState } from "../state/RobotState";
+
+/**
+ * The message to speak when a robot is being turned off.
+ */
+const turnOffMessage = "The Robot has been turned off!";
+
+/**
+ * The message to speak when a robot is being turned on.
+ */
+const turnOnMessage = "The Robot has been turned on!";
 
 /**
  * A middleware function that is executed on every request to check if the
  * robot is commanded to speak a certain message. When requested to do so,
  * the message is sent to the console.
+ * @param print The printer function that prints `TextMessage`s.
  * @param api The Redux store.
  */
-export function createSpeakingRobotMiddleware(): Middleware<{}, RobotState, Dispatch> {
+export function createSpeakingRobotMiddleware(print: Printer): Middleware<{}, RobotState, Dispatch> {
     return (api) => (next) => (action) => {
-        // TODO: dispatching from here is impossible atm when the machine
-        // is to be turned off due to the ordering of the middlewares, solve!
-
-        if (action.type === "speak") {
-            // tslint:disable-next-line: no-console
-            console.log(action.payload);
+        // in case the robot is in a turned off state and an attempt was
+        // made to make the robot speak, we fail-fast the procedure
+        const robot = api.getState();
+        if (!robot.isOn() && action.type === "speak") {
+            throw Error(
+                `Please turn the robot on before attempting to make ` +
+                `the robot speak.`,
+            );
         }
 
-        return next(action);
+        // update the state and obtain it
+        const result = next(action);
+        const updatedState = api.getState();
+
+        // and then perform a side effect
+        switch (action.type) {
+            case "turnOn":
+                print(turnOnMessage);
+                break;
+
+            case "turnOff":
+                print(turnOffMessage);
+                break;
+
+            case "speak":
+                print(action.payload);
+                break;
+
+            case "advanceAlphabeticLetter":
+                print("Robot has advanced to the letter " + selectAlphabeticLetter(updatedState));
+                break;
+        }
+
+        // and save our updated state!
+        return result;
     };
 }
 
 /**
  * A middleware function that is executed on every request to check if actions
- * oftype `advanceAlphabeticLetter` and `speak`, that are to be applied on
- * `RobotState`s, are actually valid moves. Otherwise, an error is thrown.
+ * of type `advanceAlphabeticLetter`, that are to be applied on `RobotState`s,
+ * are actually valid moves. Otherwise, an error is thrown.
  * @param api The Redux store.
  */
-export function createActivityFilter(): Middleware<{}, RobotState, Dispatch> {
+export function createAlphabeticLetterFilter(): Middleware<{}, RobotState, Dispatch> {
     return (api) => (next) => (action) => {
+        // make sure that the robot is actually turned on if attempted
+        // to advance in the alphabetic sequence
         switch (action.type) {
-            case "speak":
             case "advanceAlphabeticLetter":
                 const robot = api.getState();
                 if (!robot.isOn()) {
                     throw Error(
                         `Please turn the robot on before attempting to make ` +
-                        `the robot speak or make alphabetic advancements.`,
+                        `the robot make alphabetic advancements.`,
                     );
                 }
 
-                return next(action);
+                break;
         }
 
+        // and apply update and save state
         return next(action);
     };
 }

@@ -1,6 +1,7 @@
 import { applyMiddleware, createStore } from "redux";
 import { advanceAlphabeticLetter, speak, turnRobotOff, turnRobotOn } from "./actions/RobotAction";
-import { createActivityFilter, createSpeakingRobotMiddleware } from "./middleware/RobotMiddleware";
+import { createAlphabeticLetterFilter, createSpeakingRobotMiddleware } from "./middleware/RobotMiddleware";
+import { consolePrinter } from "./printer/console";
 import { robotStatusReducer } from "./reducer/RobotReducer";
 
 // Create a Redux store holding the state of your app.
@@ -8,8 +9,8 @@ import { robotStatusReducer } from "./reducer/RobotReducer";
 const store = createStore(
     robotStatusReducer,
     applyMiddleware(
-        createActivityFilter(),
-        createSpeakingRobotMiddleware(),
+        createAlphabeticLetterFilter(),
+        createSpeakingRobotMiddleware(consolePrinter),
     ),
 );
 
@@ -25,7 +26,7 @@ async function main() {
     store.dispatch(turnRobotOn());
 
     store.dispatch(advanceAlphabeticLetter());
-    store.dispatch(speak("Hi!"));
+    store.dispatch(advanceAlphabeticLetter());
 }
 
 main();
